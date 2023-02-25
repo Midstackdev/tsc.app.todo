@@ -1,7 +1,14 @@
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import React, { FC, ReactElement } from 'react';
+import { customTheme } from './theme/customTheme';
 
 const App: FC = (): ReactElement => {
-  return <div className="App">APP</div>;
+  return (
+    <ThemeProvider theme={customTheme}>
+      <CssBaseline />
+      <h1>APP</h1>
+    </ThemeProvider>
+  );
 };
 
 export default App;

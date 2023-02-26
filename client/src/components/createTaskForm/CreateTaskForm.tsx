@@ -8,6 +8,20 @@ import { SelectField } from './_selectField';
 import { TitleField } from './_titleField';
 
 export const CreateTaskForm: FC = (): ReactElement => {
+  const statusItems = Object.keys(Status)
+    .map((x) => {
+      return {
+        value: x,
+        label: x.toLocaleUpperCase(),
+      };
+    })
+    .filter((x) => x.value !== 'completed');
+  const priorityItems = Object.keys(Priority).map((x) => {
+    return {
+      value: x,
+      label: x.toLocaleUpperCase(),
+    };
+  });
   return (
     <Box
       display={'flex'}
@@ -25,39 +39,9 @@ export const CreateTaskForm: FC = (): ReactElement => {
         <DescriptionField />
         <DateField />
         <Stack direction={'row'} spacing={2} sx={{ width: '100%' }}>
-          <SelectField
-            name="status"
-            label="Status"
-            items={[
-              {
-                value: Status.todo,
-                label: Status.todo.toLocaleUpperCase(),
-              },
-              {
-                value: Status.inProgress,
-                label: Status.inProgress.toLocaleUpperCase(),
-              },
-            ]}
-          />
+          <SelectField name="status" label="Status" items={statusItems} />
 
-          <SelectField
-            name="priority"
-            label="Priority"
-            items={[
-              {
-                value: Priority.low,
-                label: Priority.low.toLocaleUpperCase(),
-              },
-              {
-                value: Priority.normal,
-                label: Priority.normal.toLocaleUpperCase(),
-              },
-              {
-                value: Priority.high,
-                label: Priority.high.toLocaleUpperCase(),
-              },
-            ]}
-          />
+          <SelectField name="priority" label="Priority" items={priorityItems} />
         </Stack>
       </Stack>
     </Box>

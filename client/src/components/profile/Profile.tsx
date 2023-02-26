@@ -1,11 +1,11 @@
 import { Avatar, Box, Typography } from '@mui/material';
 import React, { FC, ReactElement } from 'react';
 
-interface IProfile {
+interface IProfileProp {
   name?: string;
 }
 
-export const Profile: FC<IProfile> = ({ name }): ReactElement => {
+export const Profile: FC<IProfileProp> = ({ name }): ReactElement => {
   return (
     <Box
       display={'flex'}

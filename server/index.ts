@@ -1,7 +1,9 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import cors from 'cors';
+import routes from './src/routes';
+import { Task } from './src/models/Task.entity';
 
 dotenv.config();
 const port = process.env.PORT;
@@ -16,6 +18,7 @@ export const AppDataSource = new DataSource({
   username: process.env.MYSQL_DB_USER,
   password: process.env.MYSQL_DB_PASSWORD,
   database: process.env.MYSQL_DB_DATABASE,
+  entities: [Task],
   synchronize: true,
 });
 
@@ -23,9 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express Typescript');
-});
+app.use(routes);
 
 AppDataSource.initialize()
   .then(() => {

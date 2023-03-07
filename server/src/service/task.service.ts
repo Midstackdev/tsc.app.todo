@@ -2,14 +2,12 @@ import { AppDataSource } from '../..';
 import { Task } from '../models/Task.entity';
 import { instanceToPlain } from 'class-transformer';
 
-export class TaskController {
-  constructor(private taskRepository = AppDataSource.getRepository(Task)) {}
-
-  public async index(): Promise<Task[]> {
+class TaskService {
+  public async getAll(): Promise<Task[]> {
     let tasks!: Task[];
 
     try {
-      tasks = await this.taskRepository.find({
+      tasks = await AppDataSource.getRepository(Task).find({
         order: {
           date: 'ASC',
         },
@@ -21,4 +19,21 @@ export class TaskController {
       throw error;
     }
   }
+
+  public async create(body: Record<string, never>): Promise<Task> {
+    let task!: Task;
+    // const newTask = new Task();
+    const newTask = { ...body };
+
+    try {
+      task = await AppDataSource.getRepository(Task).save(newTask);
+      task = instanceToPlain(task) as Task;
+      return task;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
+
+export const taskService = new TaskService();

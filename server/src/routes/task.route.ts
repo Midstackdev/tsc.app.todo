@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { index, store } from '../controllers/task';
+import { taskController } from '../controllers/task';
 
 const route: Router = Router();
 
-route.get('/', index);
-route.post('/', store);
+route.get('/', taskController.index);
+route.post('/', taskController.store);
 
 export default route;

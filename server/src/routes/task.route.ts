@@ -5,5 +5,6 @@ const route: Router = Router();
 
 route.get('/', taskController.index);
 route.post('/', taskController.store);
+route.put('/', taskController.update);
 
 export default route;

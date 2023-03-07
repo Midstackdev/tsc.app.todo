@@ -1,6 +1,7 @@
 import { AppDataSource } from '../..';
 import { Task } from '../models/Task.entity';
-import { instanceToPlain } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { UpdateResult } from 'typeorm';
 
 class TaskService {
   public async getAll(): Promise<Task[]> {
@@ -34,6 +35,41 @@ class TaskService {
       throw error;
     }
   }
+
+  public static async findById(id: string): Promise<Task | null> {
+    let task!: Task | null;
+
+    try {
+      task = await AppDataSource.getRepository(Task).findOneBy({
+        id,
+      });
+      task = instanceToPlain(task) as Task;
+      return task;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  public static async update(
+    id: string,
+    options: Record<string, never>,
+  ): Promise<UpdateResult> {
+    let task!: UpdateResult;
+
+    try {
+      task = await AppDataSource.getRepository(Task).update(
+        id,
+        plainToInstance(Task, { ...options }),
+      );
+      task = instanceToPlain(task) as UpdateResult;
+      return task;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 export const taskService = new TaskService();
+export { TaskService };

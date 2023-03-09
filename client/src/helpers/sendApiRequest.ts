@@ -33,3 +33,5 @@ export async function sendApiRequest<T>(
 
   return await response.json();
 }
+
+export const API_URL = 'http://localhost:5000';

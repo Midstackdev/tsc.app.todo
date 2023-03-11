@@ -1,18 +1,43 @@
 import { Alert, Box, Grid, LinearProgress } from '@mui/material';
 import format from 'date-fns/format';
 import React, { FC, ReactElement } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { API_URL, sendApiRequest } from '../../helpers/sendApiRequest';
 import { Status } from '../createTaskForm/enums/Status';
 import { Task } from '../task/Task';
 import { TaskCounter } from '../taskCounter/TaskCounter';
-import { ITaskApi } from './interface';
+import { ITaskApi, IUpdateTask } from './interface';
 
 export const TaskArea: FC = (): ReactElement => {
   const getTasks = async () => {
     return await sendApiRequest<ITaskApi[]>(`${API_URL}/tasks`, 'GET');
   };
   const { error, isLoading, data, refetch } = useQuery('tasks', getTasks);
+  const updateTaskMutation = useMutation((data: IUpdateTask) =>
+    sendApiRequest(`${API_URL}/tasks`, 'PUT', data),
+  );
+
+  const handleStatusChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string,
+  ) => {
+    updateTaskMutation.mutate({
+      id,
+      status: e.target.checked ? Status.inProgress : Status.todo,
+    });
+  };
+  
+  const handleMarkCompleted = (
+    e:
+      | React.MouseEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) => {
+    updateTaskMutation.mutate({
+      id,
+      status: Status.completed,
+    });
+  };
   return (
     <Grid item md={8} px={4}>
       <Box mb={8} px={4}>
@@ -50,12 +75,13 @@ export const TaskArea: FC = (): ReactElement => {
             ) : (
               Array.isArray(data) &&
               data?.length > 0 &&
-              data?.map(
-                (task) =>
-                  task.status === Status.todo ||
-                  task.status === Status.inProgress ? (
-                    <Task key={task.id} {...task} />
-                  ): (false)
+              data?.map((task) =>
+                task.status === Status.todo ||
+                task.status === Status.inProgress ? (
+                  <Task key={task.id} {...task} onStatusChange={handleStatusChange} onClick={handleMarkCompleted} />
+                ) : (
+                  false
+                ),
               )
             )}
           </>

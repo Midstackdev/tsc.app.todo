@@ -1,5 +1,6 @@
 import { Box, Button, FormControlLabel, Switch } from '@mui/material';
 import React, { FC, ReactElement } from 'react';
+import { Status } from '../createTaskForm/enums/Status';
 import { ITaskFooter } from './interfaces';
 
 export const TaskFooter: FC<ITaskFooter> = ({
@@ -17,7 +18,13 @@ export const TaskFooter: FC<ITaskFooter> = ({
     >
       <FormControlLabel
         label="In Progress"
-        control={<Switch onChange={(e) => onStatusChange(e)} color="warning" />}
+        control={
+          <Switch
+            defaultChecked={status === Status.inProgress}
+            onChange={(e) => onStatusChange(e, id)}
+            color="warning"
+          />
+        }
       />
       <Button
         variant="contained"
@@ -26,7 +33,7 @@ export const TaskFooter: FC<ITaskFooter> = ({
         sx={{
           color: '#fff',
         }}
-        onClick={(e) => onClick(e)}
+        onClick={(e) => onClick(e, id)}
       >
         Mark Complete
       </Button>

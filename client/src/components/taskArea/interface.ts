@@ -8,6 +8,11 @@ export interface ICreateTask {
   status: string;
   priority: string;
 }
+export interface IUpdateTask {
+  id: string;
+  status: string;
+  priority?: string;
+}
 
 export interface ITaskApi {
   id: string;

@@ -1,10 +1,18 @@
-import { Box, Grid } from '@mui/material';
+import { Alert, Box, Grid, LinearProgress } from '@mui/material';
 import format from 'date-fns/format';
 import React, { FC, ReactElement } from 'react';
+import { useQuery } from 'react-query';
+import { API_URL, sendApiRequest } from '../../helpers/sendApiRequest';
+import { Status } from '../createTaskForm/enums/Status';
 import { Task } from '../task/Task';
 import { TaskCounter } from '../taskCounter/TaskCounter';
+import { ITaskApi } from './interface';
 
 export const TaskArea: FC = (): ReactElement => {
+  const getTasks = async () => {
+    return await sendApiRequest<ITaskApi[]>(`${API_URL}/tasks`, 'GET');
+  };
+  const { error, isLoading, data, refetch } = useQuery('tasks', getTasks);
   return (
     <Grid item md={8} px={4}>
       <Box mb={8} px={4}>
@@ -26,9 +34,31 @@ export const TaskArea: FC = (): ReactElement => {
           <TaskCounter />
         </Grid>
         <Grid item display={'flex'} flexDirection="column" xs={10} md={8}>
-          <Task />
-          <Task />
-          <Task />
+          <>
+            {error && (
+              <Alert severity="error">
+                There was an error fetching your tasks
+              </Alert>
+            )}
+            {!error && Array.isArray(data) && data?.length === 0 && (
+              <Alert severity="warning">
+                You do not have any tasks created yet. Start creating tasks.
+              </Alert>
+            )}
+            {isLoading ? (
+              <LinearProgress />
+            ) : (
+              Array.isArray(data) &&
+              data?.length > 0 &&
+              data?.map(
+                (task) =>
+                  task.status === Status.todo ||
+                  task.status === Status.inProgress ? (
+                    <Task key={task.id} {...task} />
+                  ): (false)
+              )
+            )}
+          </>
         </Grid>
       </Grid>
     </Grid>

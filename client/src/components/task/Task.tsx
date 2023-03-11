@@ -10,6 +10,7 @@ import { TaskHeader } from './_taskHeader';
 
 export const Task: FC<ITask> = (props): ReactElement => {
   const {
+    id,
     title = 'test title',
     date = new Date(),
     description = 'Lorem ipsum dolor sit amet consectetur.',
@@ -36,7 +37,7 @@ export const Task: FC<ITask> = (props): ReactElement => {
     >
       <TaskHeader title={title} date={date} />
       <TaskDiscription description={description} />
-      <TaskFooter onClick={onClick} onStatusChange={onStatusChange} />
+      <TaskFooter id={id} status={status} onClick={onClick} onStatusChange={onStatusChange} />
     </Box>
   );
 };

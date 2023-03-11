@@ -3,6 +3,8 @@ import React, { FC, ReactElement } from 'react';
 import { ITaskFooter } from './interfaces';
 
 export const TaskFooter: FC<ITaskFooter> = ({
+  id,
+  status,
   onStatusChange = (e) => console.log(e),
   onClick = (e) => console.log(e),
 }): ReactElement => {

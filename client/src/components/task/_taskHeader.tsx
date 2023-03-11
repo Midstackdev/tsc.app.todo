@@ -13,7 +13,7 @@ export const TaskHeader: FC<ITaskHeader> = ({
         <Typography variant="h6">{title}</Typography>
       </Box>
       <Box>
-        <Chip variant="outlined" label={format(date, 'PPPP')} />
+        <Chip variant="outlined" label={format(new Date(date), 'PPPP')} />
       </Box>
     </Box>
   );

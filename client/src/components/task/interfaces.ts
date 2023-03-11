@@ -2,7 +2,7 @@ import React from 'react';
 
 export interface ITaskHeader {
   title?: string;
-  date?: Date;
+  date?: Date | string;
 }
 
 export interface ITaskDescription {
@@ -16,10 +16,10 @@ export interface ITaskFooter {
       | React.MouseEvent<HTMLButtonElement>
       | React.MouseEvent<HTMLAnchorElement>,
   ) => void;
+  id: string;
+  status?: string;
 }
 
 export interface ITask extends ITaskHeader, ITaskDescription, ITaskFooter {
-  id?: string;
   priority?: string;
-  status?: string;
 }

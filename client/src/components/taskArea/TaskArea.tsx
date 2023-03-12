@@ -1,7 +1,8 @@
 import { Alert, Box, Grid, LinearProgress } from '@mui/material';
 import format from 'date-fns/format';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
+import { TaskStatusChangedContext } from '../../context';
 import { API_URL, sendApiRequest } from '../../helpers/sendApiRequest';
 import { Status } from '../createTaskForm/enums/Status';
 import { Task } from '../task/Task';
@@ -10,6 +11,7 @@ import { taskCounter } from './helper';
 import { ITaskApi, IUpdateTask } from './interface';
 
 export const TaskArea: FC = (): ReactElement => {
+  const taskUpdatedContext = useContext(TaskStatusChangedContext);
   const getTasks = async () => {
     return await sendApiRequest<ITaskApi[]>(`${API_URL}/tasks`, 'GET');
   };
@@ -17,6 +19,16 @@ export const TaskArea: FC = (): ReactElement => {
   const updateTaskMutation = useMutation((data: IUpdateTask) =>
     sendApiRequest(`${API_URL}/tasks`, 'PUT', data),
   );
+
+  useEffect(() => {
+    refetch();
+  }, [taskUpdatedContext.updated]);
+
+  useEffect(() => {
+    if (updateTaskMutation.isSuccess) {
+      taskUpdatedContext.toggle();
+    }
+  }, [updateTaskMutation.isSuccess]);
 
   const handleStatusChange = (
     e: React.ChangeEvent<HTMLInputElement>,

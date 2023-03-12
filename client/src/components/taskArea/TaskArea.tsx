@@ -6,6 +6,7 @@ import { API_URL, sendApiRequest } from '../../helpers/sendApiRequest';
 import { Status } from '../createTaskForm/enums/Status';
 import { Task } from '../task/Task';
 import { TaskCounter } from '../taskCounter/TaskCounter';
+import { taskCounter } from './helper';
 import { ITaskApi, IUpdateTask } from './interface';
 
 export const TaskArea: FC = (): ReactElement => {
@@ -26,7 +27,7 @@ export const TaskArea: FC = (): ReactElement => {
       status: e.target.checked ? Status.inProgress : Status.todo,
     });
   };
-  
+
   const handleMarkCompleted = (
     e:
       | React.MouseEvent<HTMLButtonElement>
@@ -54,9 +55,18 @@ export const TaskArea: FC = (): ReactElement => {
           xs={12}
           mb={8}
         >
-          <TaskCounter />
-          <TaskCounter />
-          <TaskCounter />
+          <TaskCounter
+            count={data ? taskCounter(data, Status.todo) : undefined}
+            status={Status.todo}
+          />
+          <TaskCounter
+            count={data ? taskCounter(data, Status.inProgress) : undefined}
+            status={Status.inProgress}
+          />
+          <TaskCounter
+            count={data ? taskCounter(data, Status.completed) : undefined}
+            status={Status.completed}
+          />
         </Grid>
         <Grid item display={'flex'} flexDirection="column" xs={10} md={8}>
           <>
@@ -78,7 +88,12 @@ export const TaskArea: FC = (): ReactElement => {
               data?.map((task) =>
                 task.status === Status.todo ||
                 task.status === Status.inProgress ? (
-                  <Task key={task.id} {...task} onStatusChange={handleStatusChange} onClick={handleMarkCompleted} />
+                  <Task
+                    key={task.id}
+                    {...task}
+                    onStatusChange={handleStatusChange}
+                    onClick={handleMarkCompleted}
+                  />
                 ) : (
                   false
                 ),
